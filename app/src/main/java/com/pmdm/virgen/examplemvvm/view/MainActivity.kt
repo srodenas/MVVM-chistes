@@ -1,7 +1,14 @@
-package com.pmdm.virgen.examplemvvm
+package com.pmdm.virgen.examplemvvm.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import com.pmdm.virgen.examplemvvm.databinding.ActivityMainBinding
+import com.pmdm.virgen.examplemvvm.model.Joke
+import com.pmdm.virgen.examplemvvm.model.Repository
+import com.pmdm.virgen.examplemvvm.modelview.JokeViewModel
 
 //https://developer.android.com/topic/libraries/architecture/viewmodel?hl=es-419
 
@@ -30,8 +37,53 @@ el observer informará al Activity que está suscrito a dicho ViewModel. Punto 5
  */
 
 class MainActivity : AppCompatActivity() {
+    private val jokeViewModel : JokeViewModel by viewModels() //Asignamos el ViewModel al Activity y lo delegamos a viewModels para que se encargue de ciertas acciones.
+    private lateinit var binding : ActivityMainBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        initObserverChangeJoke()  //iniciamos el observador sobre cualquier cambio del modelo.
+        onClickChangeJoke()  //inicializamos el listener a la pantalla.
+        initFirstJoke()
     }
+
+
+
+
+    /*
+        Inicializamos el observador del ViewModel frente a cualquier cambio.
+        En el momento que desde el ViewModel se ejecute el postValue, se ejecutará la acción
+        que le sigue al this.
+     */
+    private fun initObserverChangeJoke(){
+        jokeViewModel.jokeModel.observe(this,  //observamos este objeto con esta acción a realizar.
+            { newJoke->
+                //newJoke es el nuevo Joke aleaorio. Debemos setearlo.
+                binding.titleJoke.text= newJoke.title
+                binding.descriptionJoke.text = newJoke.joke
+            }
+        )
+    }
+
+
+
+    /*
+    Método que desde la IU, informará de un cambio mediante un evento.
+    Se notifica al ViewModel y lanzando su acción de cambio.
+     */
+    private fun onClickChangeJoke(){
+        binding.clyActiMain.setOnClickListener{
+            jokeViewModel.changeJokeForViewModel() //llamamos al ViewModel con su función que cambiará el modelo.
+        }
+    }
+
+
+    private fun initFirstJoke() {
+        jokeViewModel.initFirstJoke() //llamamos al ViewModel con su función que cambiará el modelo.
+    }
+
+
 }
