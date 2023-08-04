@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "197250527651",
+    "project_id": "nomadic-basis-360417",
+    "storage_bucket": "nomadic-basis-360417.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197250527651:android:540d120a308985b0e1ea16",
+        "android_client_info": {
+          "package_name": "com.pmdm.virgen.examplemvvm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197250527651-ag1v2qc3fcapissn07iugfn273opjemb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPcWTVRnRHzTntowOTVxVLcJ8TD7Xo2EY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197250527651-ag1v2qc3fcapissn07iugfn273opjemb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
