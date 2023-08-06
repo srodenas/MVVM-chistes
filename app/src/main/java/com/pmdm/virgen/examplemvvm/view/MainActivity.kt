@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.pmdm.virgen.examplemvvm.databinding.ActivityMainBinding
 import com.pmdm.virgen.examplemvvm.model.Joke
 import com.pmdm.virgen.examplemvvm.model.Repository
@@ -39,6 +42,7 @@ el observer informará al Activity que está suscrito a dicho ViewModel. Punto 5
 class MainActivity : AppCompatActivity() {
     private val jokeViewModel : JokeViewModel by viewModels() //Asignamos el ViewModel al Activity y lo delegamos a viewModels para que se encargue de ciertas acciones.
     private lateinit var binding : ActivityMainBinding
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +52,13 @@ class MainActivity : AppCompatActivity() {
         initObserverChangeJoke()  //iniciamos el observador sobre cualquier cambio del modelo.
         onClickChangeJoke()  //inicializamos el listener a la pantalla.
         initFirstJoke()
+
+        /*
+        Para google analytics.
+         */
+        // Obtain the FirebaseAnalytics instance.
+        firebaseAnalytics = Firebase.analytics
+        registerLogsForAnalytics()
     }
 
 
@@ -83,6 +94,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFirstJoke() {
         jokeViewModel.initFirstJoke() //llamamos al ViewModel con su función que cambiará el modelo.
+    }
+
+
+    private fun registerLogsForAnalytics() {
+       /*val parameters = Bundle().apply {
+            this.putString("message", "Hemos integrado cpm Firebase")
+            this.putString("email", "srodher115@g.educaand.es")
+        }
+
+        firebaseAnalytics.setDefaultEventParameters(parameters)
+*/
+        val bundle = Bundle().apply {
+            this.putString("message", "Hemos integrado cpm Firebase")
+            this.putString("email", "srodher115@g.educaand.es")
+        }
+        firebaseAnalytics.logEvent("Inicializamos", bundle)
+
+
     }
 
 
