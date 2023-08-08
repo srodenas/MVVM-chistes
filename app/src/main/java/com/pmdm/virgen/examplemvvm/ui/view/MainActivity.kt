@@ -1,17 +1,13 @@
-package com.pmdm.virgen.examplemvvm.view
+package com.pmdm.virgen.examplemvvm.ui.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.pmdm.virgen.examplemvvm.databinding.ActivityMainBinding
-import com.pmdm.virgen.examplemvvm.model.Joke
-import com.pmdm.virgen.examplemvvm.model.Repository
-import com.pmdm.virgen.examplemvvm.modelview.JokeViewModel
+import com.pmdm.virgen.examplemvvm.ui.modelview.JokeViewModel
 
 //https://developer.android.com/topic/libraries/architecture/viewmodel?hl=es-419
 
@@ -51,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initObserverChangeJoke()  //iniciamos el observador sobre cualquier cambio del modelo.
         onClickChangeJoke()  //inicializamos el listener a la pantalla.
-        initFirstJoke()
 
         /*
         Para google analytics.
@@ -92,19 +87,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun initFirstJoke() {
-        jokeViewModel.initFirstJoke() //llamamos al ViewModel con su función que cambiará el modelo.
-    }
-
 
     private fun registerLogsForAnalytics() {
-       /*val parameters = Bundle().apply {
-            this.putString("message", "Hemos integrado cpm Firebase")
-            this.putString("email", "srodher115@g.educaand.es")
-        }
 
-        firebaseAnalytics.setDefaultEventParameters(parameters)
-*/
         val bundle = Bundle().apply {
             this.putString("message", "Hemos integrado cpm Firebase")
             this.putString("email", "srodher115@g.educaand.es")
