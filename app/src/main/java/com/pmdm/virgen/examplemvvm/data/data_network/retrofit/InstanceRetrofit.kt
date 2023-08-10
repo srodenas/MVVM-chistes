@@ -1,6 +1,6 @@
-package com.pmdm.virgen.examplemvvm.retrofit
+package com.pmdm.virgen.examplemvvm.data.data_network.retrofit
 
-import com.pmdm.virgen.examplemvvm.data.data_network.ApiService
+import com.pmdm.virgen.examplemvvm.data.data_network.service.ApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -8,7 +8,6 @@ object InstanceRetrofit {
 
     private const val BASE_URL = "https://nomadic-basis-360417-default-rtdb.europe-west1.firebasedatabase.app/"
 
-    //De alguna forma, al llamar a retrofitService del tipo Interfaz, retrofit crea las llamadas implementadas en ApiService.
     val retrofitService : ApiService by lazy {
         getRetrofit().create(ApiService::class.java)
     }

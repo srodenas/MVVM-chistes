@@ -1,5 +1,6 @@
 package com.pmdm.virgen.examplemvvm.data.data_network
 
+import com.pmdm.virgen.examplemvvm.data.data_network.service.JokeService
 import com.pmdm.virgen.examplemvvm.data.model.Joke
 import com.pmdm.virgen.examplemvvm.data.model.JokeRepository
 
