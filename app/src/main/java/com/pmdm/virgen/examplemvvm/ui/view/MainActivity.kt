@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         initObserverChangeJoke()  //iniciamos el observador sobre cualquier cambio del modelo.
         onClickChangeJoke()  //inicializamos el listener a la pantalla.
 
@@ -55,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         firebaseAnalytics = Firebase.analytics
         registerLogsForAnalytics()
     }
-
 
 
 
@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity() {
             jokeViewModel.changeJokeForViewModel() //llamamos al ViewModel con su función que cambiará el modelo.
         }
     }
-
 
 
     private fun registerLogsForAnalytics() {

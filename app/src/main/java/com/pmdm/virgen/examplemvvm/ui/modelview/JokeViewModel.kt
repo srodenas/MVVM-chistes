@@ -3,24 +3,34 @@ package com.pmdm.virgen.examplemvvm.ui.modelview
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.pmdm.virgen.examplemvvm.data.model.Joke
-import com.pmdm.virgen.examplemvvm.data.model.RepositoryApi
-import com.pmdm.virgen.examplemvvm.data.model.ResponseJokes
-import com.pmdm.virgen.examplemvvm.retrofit.InstanceRetrofit
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+
+import com.pmdm.virgen.examplemvvm.domain.GetJokeUseCase
+import com.pmdm.virgen.examplemvvm.domain.GetRandomJokeUseCase
+
 import kotlinx.coroutines.launch
-import retrofit2.Response
+
 
 /*
 Nuestro ViewModel, tentrá un atributo liveData del modelo. Será mutable porque tendrá cambios.
  */
 class JokeViewModel : ViewModel() {
     var jokeModel = MutableLiveData<Joke>() //liveData que se encarga de notificar los cambios.
-    lateinit var listJoke : RepositoryApi
+    val getJokeUseCase = GetJokeUseCase()  //Creamos nuestro primer caso de uso que nos devolverá todos los datos en memoria.
+    val getRandomJokeUseCase = GetRandomJokeUseCase() //Creamos nuestro segundo caso de uso que será el aleatorio.
 
+
+    //lanzamos la corrutina por primera vez.
     init {
-        getJokesForApi()
+        viewModelScope.launch {
+            val result : List<Joke> ? = getJokeUseCase()//Aquí están todos los datos recuperados. Invoca a su método invoke porque esta con operator.
+
+            if (!result.isNullOrEmpty()){
+                jokeModel.postValue(result[11])  //cargamos nuestro primer chiste. El preferido.
+            }
+        }
+
     }
 
     /*
@@ -28,35 +38,8 @@ class JokeViewModel : ViewModel() {
     Aquí tendré que invocar el servicio de Retrofit.
      */
     fun changeJokeForViewModel(){
-        val newJoke = listJoke.randomJoke() //Objetemos el nuevo Chiste.
+        val newJoke = getRandomJokeUseCase()  //Al tener sólo un método con operator, no hace falta invocar a su método de manera implícita.
         jokeModel.postValue(newJoke)  //El viewModel, notificamos el cambio al activity.
-    }
-
-
-    /*
-    Esta función, se encargará en segundo plano y de manera asíncrona de invocar al servico
-    de Retrofit.
-     */
-    fun getJokesForApi(){
-        CoroutineScope(Dispatchers.IO).launch {
-            val call : Response<ResponseJokes> = InstanceRetrofit.retrofitService.getJokes("/joke.json")
-            val data : ResponseJokes? = call.body()  //pongo ?, porque puede ser nulo.
-            if (call.isSuccessful){
-                val list = data?.listJoke ?: emptyList()
-                listJoke = RepositoryApi(list)
-
-
-            }else{
-                listJoke = RepositoryApi(emptyList())
-                showError()
-
-            }
-        }
-    }
-
-
-    private fun showError() {
-        Log.i("err-api", "Error en la obtención de los objetos GET")
     }
 
 
