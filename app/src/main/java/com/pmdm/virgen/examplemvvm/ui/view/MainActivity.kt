@@ -3,6 +3,8 @@ package com.pmdm.virgen.examplemvvm.ui.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -70,11 +72,11 @@ class MainActivity : AppCompatActivity() {
 
         initObserverChangeJoke()  //iniciamos el observador sobre cualquier cambio del modelo.
         onClickChangeJoke()  //inicializamos el listener a la pantalla.
+       // jokeViewModel.initJokeViewModel()  //He borrado este método porque lo hace el constructor del ViewModel
 
         /*
         Para google analytics.
          */
-        // Obtain the FirebaseAnalytics instance.
         firebaseAnalytics = Firebase.analytics
         registerLogsForAnalytics()
     }
@@ -87,13 +89,26 @@ class MainActivity : AppCompatActivity() {
         que le sigue al this.
      */
     private fun initObserverChangeJoke(){
-        jokeViewModel.jokeModel.observe(this,  //observamos este objeto con esta acción a realizar.
-            { newJoke->
+
+        //Inicializamos el observador del progress bar
+        jokeViewModel.isLoading.observe(
+            this,
+            Observer { visible->
+                binding.progessBar.isVisible = visible  //Recibe el cambio a true, porque ya ha cargado los datos.
+            }
+        )
+
+        //Inicializamos el observador del modelo
+        jokeViewModel.jokeModel.observe(
+            this,  //observamos este objeto con esta acción a realizar.
+            Observer { newJoke->
                 //newJoke es el nuevo Joke aleaorio. Debemos setearlo.
                 binding.titleJoke.text= newJoke.title
                 binding.descriptionJoke.text = newJoke.joke
             }
         )
+
+
     }
 
 
@@ -108,11 +123,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+/*
+Para los eventos de las analíticas.
+ */
     private fun registerLogsForAnalytics() {
 
         val bundle = Bundle().apply {
-            this.putString("message", "Hemos integrado cpm Firebase")
+            this.putString("message", "Prueba de la app")
             this.putString("email", "srodher115@g.educaand.es")
         }
         firebaseAnalytics.logEvent("Inicializamos", bundle)

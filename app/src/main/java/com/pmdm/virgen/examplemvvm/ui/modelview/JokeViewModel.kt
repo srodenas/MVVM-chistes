@@ -17,6 +17,8 @@ Nuestro ViewModel, tentrá un atributo liveData del modelo. Será mutable porque
  */
 class JokeViewModel : ViewModel() {
     var jokeModel = MutableLiveData<Joke>() //liveData que se encarga de notificar los cambios.
+    var isLoading = MutableLiveData<Boolean>() //Se encargará de mostrar/ocultar el progess bar.
+
     val getJokeUseCase = GetJokeUseCase()  //Creamos nuestro primer caso de uso que nos devolverá todos los datos en memoria.
     val getRandomJokeUseCase = GetRandomJokeUseCase() //Creamos nuestro segundo caso de uso que será el aleatorio.
 
@@ -24,14 +26,22 @@ class JokeViewModel : ViewModel() {
     //lanzamos la corrutina por primera vez.
     init {
         viewModelScope.launch {
-            val result : List<Joke> ? = getJokeUseCase()//Aquí están todos los datos recuperados. Invoca a su método invoke porque esta con operator.
+            isLoading.postValue(true)  //lo pongo para que se muestre y espere.
 
-            if (!result.isNullOrEmpty()){
+            val result: List<Joke>? =
+                getJokeUseCase()//Aquí están todos los datos recuperados. Invoca a su método invoke porque esta con operator.
+
+            if (!result.isNullOrEmpty()) {
                 jokeModel.postValue(result[11])  //cargamos nuestro primer chiste. El preferido.
+                isLoading.postValue(false)  //Ya ha cargado los datos, entonces ocultamos el progressbar. Notificará a la vista.
+            } else {
+                isLoading.postValue(false)  //No  ha cargado y el progress bar no debe hacerse invisible.
+
             }
         }
 
     }
+
 
     /*
     Método que hace que el modelo cambie.
